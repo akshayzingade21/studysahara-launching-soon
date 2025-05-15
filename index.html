@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySahara - Navigating Your Path to Global Education</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+    /* Global Styles */
+    body {
+        font-family: 'Open Sans', sans-serif;
+        margin: 0;
+        padding-top: 80px; /* Initial padding to prevent overlap */
+        background: linear-gradient(to right, #cce5ff, #f0f8ff);
+        color: #333;
+        line-height: 1.7;
+        font-size: 16px;
+        transition: padding-top 0.3s ease;
+    }
+
+    body.scrolled {
+        padding-top: 60px; /* Reduced padding when scrolled */
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Header - Initial Style */
+    header {
+        background-image: url(""); /* Background Image */
+        background-size: cover; /* Cover the entire header */
+        background-repeat: no-repeat; /* Do not repeat the image */
+        background-position: center; /* Center the image */
+        color: #fff; /* Light text color for dark background */
+        padding: 20px 0;
+        border-bottom: 3px solid #27ae60; /* More prominent green bottom border */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Slightly more pronounced shadow */
+        position: fixed; /* Make the header stick to the top */
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 100; /* Ensure it stays above other content */
+        transition: padding 0.3s ease, height 0.3s ease; /* Smooth transition for header properties */
+        height: 80px; /* Initial header height */
+        background-color: rgba(44, 62, 80, 0.9); /* Initial dark background */
+    }
+
+    /* Header - Scrolled Style (Single Line with Dark Background and Logo Swap) */
+    header.scrolled {
+        padding: 10px 0;
+        height: 60px; /* Reduced header height */
+        /* Background color remains dark */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slightly different shadow when scrolled */
+    }
+
+    header.scrolled .logo img {
+        /* Basic styling for both logos, individual IDs can override */
+        height: 30px;
+    }
+
+    header.scrolled .logo #initialLogo {
+        display: none; /* Hide initial logo when scrolled */
+    }
+
+    header.scrolled .logo #scrolledLogo {
+        display: block; /* Show scrolled logo when scrolled */
+    }
+
+    header.scrolled .logo-text {
+        flex-direction: row; /* Company name and tagline in a row */
+        align-items: center; /* Vertically align name and tagline */
+    }
+
+    header.scrolled .logo h1 {
+        font-size: 1.8em; /* Smaller company name */
+        margin-bottom: 0;
+        margin-right: 10px; /* Space between name and tagline */
+        color: #fff; /* Light company name color when scrolled */
+    }
+
+    header.scrolled .tagline {
+        font-size: 0.9em; /* Smaller tagline */
+        margin-top: 0;
+        color: #eee; /* Light tagline color when scrolled */
+    }
+
+    header.scrolled .container {
+        padding: 0 20px; /* Adjust container padding */
+    }
+
+    header.scrolled .logo {
+        align-items: center; /* Vertically align logo and text */
+    }
+
+    header.scrolled nav ul li a {
+        color: #eee; /* Light navigation link color when scrolled */
+    }
+
+    header.scrolled nav ul li a:hover {
+        color: #fdd835; /* Yellow hover color on dark background */
+    }
+
+    header .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center; /* Vertically center logo and navigation */
+        padding: 0 20px;
+        transition: padding 0.3s ease;
+    }
+
+    header .logo {
+        display: flex;
+        align-items: center;
+        transition: align-items 0.3s ease;
+    }
+
+    header .logo img {
+        height: 50px; /* Initial logo height */
+        margin-right: 10px;
+        transition: height 0.3s ease;
+    }
+
+    header .logo #initialLogo {
+        display: block; /* Show initial logo initially */
+    }
+
+    header .logo #scrolledLogo {
+        display: none; /* Hide scrolled logo initially */
+    }
+
+    header .logo-text {
+        display: flex;
+        flex-direction: column; /* Initial stacking of name and tagline */
+        justify-content: space-between;
+        height: auto;
+        transition: flex-direction 0.3s ease, align-items 0.3s ease;
+    }
+
+    header .logo h1 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.4em;
+        font-weight: 700;
+        color: #fff; /* Light company name color for dark background */
+        margin-bottom: 2px;
+        margin-top: 0;
+        transition: font-size 0.3s ease, margin-bottom 0.3s ease, margin-right 0.3s ease;
+    }
+
+    header .tagline {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 1em;
+        color: #eee; /* Light tagline color for dark background */
+        font-weight: 600;
+        margin-top: 2px;
+        margin-left: 0;
+        margin-bottom: 0;
+        transition: font-size 0.3s ease, margin-top 0.3s ease;
+    }
+
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        transition: transform 0.3s ease;
+    }
+
+    nav ul li {
+        margin-left: 25px;
+        transition: margin-left 0.3s ease;
+    }
+
+    nav ul li a {
+        text-decoration: none;
+        color: #eee; /* Light color for dropdowns for dark background */
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+        color: #fdd835;
+    }
+
+    /* Dropdown Styles */
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: rgba(44, 62, 80, 0.9);
+    border: 1px solid #34495e;
+    border-top: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    min-width: 200px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    transform: translateY(-10px);
+    z-index: 101;
+    pointer-events: none;
+    display: flex; /* Make sure this line exists if you need flex */
+    flex-direction: column; /* Add this line */
+}
+    .dropdown-menu.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto; /* Allow interaction when shown */
+    }
+
+    .dropdown-menu li a {
+        display: block; /* Force vertical stacking */
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #eee; /* Light text color */
+        transition: background-color 0.3s ease;
+    }
+
+    .dropdown-menu li a:hover {
+        background-color: #34495e;
+    }
+
+    .dropdown-toggle::after {
+        content: '\25BE'; /* Down arrow character */
+        margin-left: 5px;
+        font-size: 0.8em;
+        vertical-align: middle;
+    }
+
+    header.scrolled .dropdown-toggle::after {
+        color: #eee; /* Ensure arrow is visible on scrolled background */
+    }
+    /* Banner Section */
+    .banner {
+        background: linear-gradient(to right, #e6f9e8, #f0f8ff);
+        padding: 40px 20px;
+        text-align: center;
+    }
+
+    .banner .container {
+        max-width: 800px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .banner img {
+        max-width: 80%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+
+    .banner h2 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2.2em;
+        font-weight: 700;
+        color: #1976d2;
+        margin-bottom: 8px;
+    }
+
+    .banner p {
+        font-size: 1em;
+        color: #4CAF50;
+        margin-bottom: 25px;
+    }
+
+    .banner .search-bar {
+        display: flex;
+        justify-content: center;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .banner input[type="text"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px 0 0 5px;
+        width: 70%;
+        font-size: 0.9em;
+        color: #3f51b5;
+    }
+
+    .banner button {
+        background-color: #ffc107;
+        color: #212121;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.9em;
+        transition: background-color 0.3s ease;
+    }
+
+    .banner button:hover {
+        background-color: #fdd835;
+    }
+
+    /* Loan Types Section */
+    .loan-types {
+        padding: 60px 0;
+        background-color: #f0f8ff;
+    }
+
+    .loan-types .container {
+        text-align: center;
+    }
+
+    .loan-types h2 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2em;
+        font-weight: 600;
+        color: #9c27b0;
+        margin-bottom: 30px;
+    }
+
+    .loan-types ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .loan-types ul li {
+        background-color: #eafaf1;
+        border: 1px solid #d4edda;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        flex-basis: calc(33% - 20px);
+        box-sizing: border-box;
+    }
+
+    .loan-types ul li h3 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.2em;
+        color: #00bcd4;
+        margin-top: 0;
+        margin-bottom: 8px;
+    }
+
+    .loan-types ul li p {
+        font-size: 0.85em;
+        color: #795548;
+    }
+
+    /* Featured Lenders Section */
+    .featured-lenders {
+        padding: 60px 0;
+        background-color: #f9f9f9;
+    }
+
+    .featured-lenders .container {
+        text-align: center;
+    }
+
+    .featured-lenders h2 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2em;
+        font-weight: 600;
+        color: #3f51b5;
+        margin-bottom: 30px;
+    }
+
+    .featured-lenders ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .featured-lenders ul li {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+    }
+
+    .featured-lenders ul li img {
+        height: 25px;
+    }
+
+    /* Footer */
+    footer {
+        background-color: #2c3e50;
+        color: #fff;
+        text-align: center;
+        padding: 20px 0;
+        position: static;
+        width: 100%;
+        font-size: 0.8em;
+    }
+
+    footer p {
+        margin: 0;
+    }
+</style>
+</head>
+<body>
+    <header id="mainHeader">
+        <div class="container">
+            <div class="logo">
+                <img id="initialLogo" src="C:\Users\aksha\studysahara2\Assets\logo.png" alt="StudySahara Logo" style="height: 100px; margin-right: 20px;">
+                <img id="scrolledLogo" src="C:\Users\aksha\studysahara2\Assets\logo.png" alt="StudySahara Scrolled Logo" style="height: 30px; margin-right: 10px; display: none;">
+                <div class="logo-text">
+                    <h1>StudySahara</h1>
+                    <p class="tagline">Navigating Your Path to Global Education</p>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">Loan Options</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="C:\Users\aksha\studysahara2\loanoption1.html">No Co-Applicant &amp; No Collateral</a></li>
+                            <li><a href="C:\Users\aksha\studysahara2\loanoption2.html">Co-Applicant &amp; No Collateral</a></li>
+                            <li><a href="C:\Users\aksha\studysahara2\loanoption3.html">Co-Applicant and Collateral</a></li>
+                            <li><a href="C:\Users\aksha\studysahara2\loanoption4.html">US Co-Applicant</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="C:\Users\aksha\studysahara2\loaneligibility.html" target="_blank">Eligibility Check</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">Lending Partners</a>
+                        <ul class="dropdown-menu partners-menu">
+                            <li><a href="#">SBI</a></li>
+                            <li><a href="#">Credila</a></li>
+                            <li><a href="#">Union Bank</a></li>
+                            <li><a href="#">PNB</a></li>
+                            <li><a href="#">ICICI Bank</a></li>
+                            <li><a href="#">Avanse</a></li>
+                            <li><a href="#">IDFC First Bank</a></li>
+                            <li><a href="#">Axis Bank</a></li>
+                            <li><a href="#">Yes Bank</a></li>
+                            <li><a href="#">Auxilo</a></li>
+                            <li><a href="#">Incred</a></li>
+                            <li><a href="#">Tata Capitals</a></li>
+                            <li><a href="#">Poonawala Fincorp</a></li>
+                            <li><a href="#">Prodigy</a></li>
+                            <li><a href="#">Mpower</a></li>
+                            <li><a href="#">Earnest</a></li>
+                            <li><a href="#">Sallie Mae</a></li>
+                            <li><a href="#">Ascent</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#" target="_blank">About Us</a></li>
+                    <li><a href="#" target="_blank">Contact Us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+
+    <div class="banner">
+        <div class="container">
+            <img src="C:\StudySahara\students_image.png" alt="Happy Students with Loan Options" style="max-width: 80%;">
+            <h2 style="color: #1976d2;">Your Journey to Global Education Begins Here.</h2>
+            <p style="color: #4CAF50;">Simplify your study abroad dreams with the best loan options and expert guidance.</p>
+            <div class="search-bar">
+                <input type="text" placeholder="Enter course, destination, or loan type">
+                <button>Search Loans</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="loan-types">
+        <div class="container">
+            <h2 style="color: #9c27b0;">Explore Our Loan Categories</h2>
+            <ul>
+                <li>
+                    <h3 style="color: #00bcd4;">Study Abroad Loans</h3>
+                    <p style="color: #795548;">Fund your international education with our specialized study abroad loan options.</p>
+                </li>
+                <li>
+                    <h3 style="color: #00bcd4;">Undergraduate Loans</h3>
+                    <p style="color: #795548;">Secure financing for your bachelor's degree and start your academic career.</p>
+                </li>
+                <li>
+                    <h3 style="color: #00bcd4;">Postgraduate Loans</h3>
+                    <p style="color: #795548;">Invest in your future with loans designed for master's, doctoral, and other advanced degrees.</p>
+                </li>
+                <li>
+                    <h3 style="color: #00bcd4;">Professional Development Loans</h3>
+                    <p style="color: #795548;">Advance your skills with loans for vocational training and professional certifications.</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="featured-lenders">
+        <div class="container">
+            <h2 style="color: #3f51b5;">Trusted Lending Partners</h2>
+            <p style="color: #757575;">We collaborate with leading banks and financial institutions to bring you reliable loan options.</p>
+            <ul>
+                <li><img src="placeholder-bank-logo.png" alt="Bank A" style="height: 25px;"></li>
+                <li><img src="placeholder-bank-logo-2.png" alt="Bank B" style="height: 25px;"></li>
+                <li><img src="placeholder-finance-logo.png" alt="Finance Company X" style="height: 25px;"></li>
+                <li><img src="placeholder-lender-logo.png" alt="Lender D" style="height: 25px;"></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 StudySahara.com. All rights reserved.</p>
+        </div>
+    </footer>
+
+   <script>
+        const header = document.getElementById('mainHeader');
+        const body = document.body;
+        const initialLogo = document.getElementById('initialLogo');
+        const scrolledLogo = document.getElementById('scrolledLogo');
+        const dropdownItems = document.querySelectorAll('.dropdown');
+
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) { // Adjust scroll threshold as needed
+                header.classList.add('scrolled');
+                body.classList.add('scrolled');
+                initialLogo.style.display = 'none';
+                scrolledLogo.style.display = 'block';
+            } else {
+                header.classList.remove('scrolled');
+                body.classList.remove('scrolled');
+                initialLogo.style.display = 'block';
+                scrolledLogo.style.display = 'none';
+            }
+        });
+
+        dropdownItems.forEach(dropdown => {
+            const toggle = dropdown.querySelector('.dropdown-toggle');
+            const menu = dropdown.querySelector('.dropdown-menu');
+
+            toggle.addEventListener('mouseenter', () => {
+                menu.classList.add('show');
+            });
+
+            dropdown.addEventListener('mouseleave', () => {
+                menu.classList.remove('show');
+            });
+
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                menu.classList.toggle('show'); // Allow click to toggle for accessibility
+            });
+        });
+
+        // Close dropdowns when clicking outside (still relevant for click-triggered open)
+        window.addEventListener('click', function(e) {
+            dropdownItems.forEach(dropdown => {
+                const toggle = dropdown.querySelector('.dropdown-toggle');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                if (menu.classList.contains('show') && !dropdown.contains(e.target)) {
+                    menu.classList.remove('show');
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>

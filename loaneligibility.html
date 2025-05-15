@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Education Loan Eligibility Checker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/4a60b27e4e.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn { animation: fadeIn 0.5s ease-out; }
+        .hover-scale:hover { transform: scale(1.05); transition: transform 0.2s; }
+        .tooltip { position: relative; }
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e40af;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .banner-bg {
+            background-image: url('https://images.unsplash.com/photo-1516321315098-34d6f1e7b32d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        .error-message { color: #dc2626; font-size: 0.875rem; margin-top: 0.25rem; }
+        #formError { display: none; color: #dc2626; font-size: 1rem; margin-bottom: 1rem; text-align: center; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex items-center justify-center p-6">
+    <div class="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-3xl transform transition-all relative">
+        <!-- Header Banner -->
+        <div class="banner-bg h-40 rounded-t-3xl mb-6 flex items-center justify-center">
+            <h1 class="text-4xl font-extrabold text-blue-500 drop-shadow-lg">StudySahara: Your Path to Global Education</h1>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="mb-6">
+            <label class="block text-sm font-semibold text-gray-800 mb-2">Form Progress</label>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div id="progressBar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Form Error Message -->
+        <div id="formError"></div>
+
+        <div id="formContainer">
+            <form id="loanForm" class="space-y-6">
+                <!-- Country Selection -->
+                <div class="animate-fadeIn">
+                    <label for="country" class="block text-sm font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-globe mr-2 text-indigo-600"></i> Where are you studying?
+                    </label>
+                    <select id="country" name="country" required class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Select your study destination">
+                        <option value="">Select a country</option>
+                        <option value="USA">USA</option>
+                        <option value="UK">UK</option>
+                        <option value="Canada">Canada</option>
+                        <option value="Ireland">Ireland</option>
+                        <option value="Germany">Germany</option>
+                        <option value="Australia">Australia</option>
+                        <option value="France">France</option>
+                    </select>
+                    <p id="countryError" class="error-message hidden">Please select a country.</p>
+                </div>
+
+                <!-- University Search -->
+                <div id="universityContainer" class="hidden animate-fadeIn">
+                    <label for="university" class="block text-sm font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-university mr-2 text-indigo-600"></i> Your University/College
+                    </label>
+                    <input type="text" id="university" name="university" required placeholder="Type first three letters" class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Enter at least 3 letters for suggestions">
+                    <p id="universityError" class="error-message hidden">Please enter a valid university.</p>
+                    <ul id="universitySuggestions" class="mt-2 max-h-48 overflow-y-auto border border-indigo-200 rounded-lg bg-white shadow-md"></ul>
+                </div>
+
+                <!-- Admission Status -->
+                <div class="animate-fadeIn">
+                    <label for="admissionStatus" class="block text-sm font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-clipboard-check mr-2 text-indigo-600"></i> Admission Status
+                    </label>
+                    <select id="admissionStatus" name="admissionStatus" required class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Select your current admission status">
+                        <option value="">Select status</option>
+                        <option value="applied">Applied</option>
+                        <option value="waiting">Waiting for admission letter</option>
+                        <option value="received">Received admission letter</option>
+                        <option value="started">Already started classes</option>
+                    </select>
+                    <p id="admissionStatusError" class="error-message hidden">Please select an admission status.</p>
+                </div>
+
+                <!-- Intake Month and Year -->
+                <div class="flex space-x-4 animate-fadeIn">
+                    <div class="flex-1">
+                        <label for="intakeMonth" class="block text-sm font-semibold text-gray-800 flex items-center">
+                            <i class="fas fa-calendar-alt mr-2 text-indigo-600"></i> Intake Month
+                        </label>
+                        <select id="intakeMonth" name="intakeMonth" required class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Select the month your course starts">
+                            <option value="">Month</option>
+                            <option value="January">January</option>
+                            <option value="February">February</option>
+                            <option value="March">March</option>
+                            <option value="April">April</option>
+                            <option value="May">May</option>
+                            <option value="June">June</option>
+                            <option value="July">July</option>
+                            <option value="August">August</option>
+                            <option value="September">September</option>
+                            <option value="October">October</option>
+                            <option value="November">November</option>
+                            <option value="December">December</option>
+                        </select>
+                        <p id="intakeMonthError" class="error-message hidden">Please select an intake month.</p>
+                    </div>
+                    <div class="flex-1">
+                        <label for="intakeYear" class="block text-sm font-semibold text-gray-800 flex items-center">
+                            <i class="fas fa-calendar-alt mr-2 text-indigo-600"></i> Intake Year
+                        </label>
+                        <input type="number" id="intakeYear" name="intakeYear" required min="2025" max="2030" placeholder="YYYY" class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Enter the year of your course start">
+                        <p id="intakeYearError" class="error-message hidden">Please enter a valid year (2025-2030).</p>
+                    </div>
+                </div>
+
+                <!-- Course Name -->
+                <div class="animate-fadeIn">
+                    <label for="course" class="block text-sm font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-book mr-2 text-indigo-600"></i> Course Name
+                    </label>
+                    <input type="text" id="course" name="course" required placeholder="e.g., Computer Science" class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Enter the name of your course">
+                    <p id="courseError" class="error-message hidden">Please enter a course name.</p>
+                </div>
+
+                <!-- Loan Amount -->
+                <div class="animate-fadeIn">
+                    <label for="loanAmount" class="block text-sm font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-money-bill-wave mr-2 text-indigo-600"></i> Loan Amount Required (INR)
+                    </label>
+                    <input type="number" id="loanAmount" name="loanAmount" required min="100000" placeholder="e.g., 5000000" class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Enter the loan amount in INR">
+                    <p id="loanAmountError" class="error-message hidden">Please enter a valid loan amount (minimum 100,000 INR).</p>
+                </div>
+
+                <!-- Co-applicant -->
+                <div class="animate-fadeIn">
+                    <label for="coApplicant" class="block text-sm font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-users mr-2 text-indigo-600"></i> Do you have a co-applicant in India?
+                    </label>
+                    <select id="coApplicant" name="coApplicant" required class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Select if you have a co-applicant">
+                        <option value="">Select</option>
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                    <p id="coApplicantError" class="error-message hidden">Please select an option.</p>
+                </div>
+
+                <!-- Co-applicant Relationship -->
+                <div id="coApplicantDetails" class="hidden animate-fadeIn">
+                    <label for="coApplicantRelationship" class="block text-sm font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-user-friends mr-2 text-indigo-600"></i> Co-applicant Relationship
+                    </label>
+                    <select id="coApplicantRelationship" name="coApplicantRelationship" class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Select the relationship with your co-applicant">
+                        <option value="">Select relationship</option>
+                        <option value="parents">Parents</option>
+                        <option value="siblings">Siblings</option>
+                        <option value="grandparents">Grandparents</option>
+                        <option value="paternalRelatives">Paternal Relatives</option>
+                        <option value="maternalRelatives">Maternal Relatives</option>
+                        <option value="cousins">Cousins</option>
+                        <option value="inLaws">In-laws</option>
+                    </select>
+                    <p id="coApplicantRelationshipError" class="error-message hidden">Please select a relationship.</p>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 hover-scale transition-all font-semibold flex items-center justify-center">
+                    <i class="fas fa-check-circle mr-2"></i> Check Your Eligibility
+                    <span id="loadingSpinner" class="hidden ml-2 animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Eligibility Result -->
+        <div id="resultContainer" class="hidden mt-8 p-6 bg-indigo-50 rounded-xl shadow-md animate-fadeIn">
+            <div id="resultContent"></div>
+            <button id="applyNow" class="mt-6 w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 hover-scale transition-all font-semibold flex items-center justify-center">
+                <i class="fas fa-arrow-right mr-2"></i> Apply Now
+            </button>
+        </div>
+
+        <!-- Application Form -->
+        <div id="applyFormContainer" class="hidden mt-8 animate-fadeIn">
+            <h2 class="text-2xl font-bold mb-6 text-indigo-700 flex items-center">
+                <i class="fas fa-rocket mr-2"></i> Let’s Get Started!
+            </h2>
+            <form id="applyForm" class="space-y-6">
+                <div>
+                    <label for="fullName" class="block text-sm font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-user mr-2 text-indigo-600"></i> Full Name
+                    </label>
+                    <input type="text" id="fullName" name="fullName" required class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Enter your full name">
+                    <p id="fullNameError" class="error-message hidden">Please enter your full name.</p>
+                </div>
+                <div>
+                    <label for="mobile" class="block text-sm font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-phone mr-2 text-indigo-600"></i> Mobile Number
+                    </label>
+                    <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" placeholder="e.g., 9876543210" required class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Enter a valid 10-digit mobile number">
+                    <p id="mobileError" class="error-message hidden">Please enter a valid 10-digit mobile number.</p>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-envelope mr-2 text-indigo-600"></i> Email ID
+                    </label>
+                    <input type="email" id="email" name="email" required class="mt-2 block w-full border-2 border-indigo-200 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white p-3 transition-all hover:border-indigo-400 tooltip" data-tooltip="Enter a valid email address">
+                    <p id="emailError" class="error-message hidden">Please enter a valid email address.</p>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 hover-scale transition-all font-semibold flex items-center justify-center">
+                    <i class="fas fa-paper-plane mr-2"></i> Submit Application
+                    <span id="applyLoadingSpinner" class="hidden ml-2 animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Utility function for logging with timestamp
+        const log = (message, data = '') => {
+            console.log(`[${new Date().toISOString()}] ${message}`, data);
+        };
+
+        // Mock university data by country
+        const universities = {
+            USA: ['Harvard University', 'Stanford University', 'MIT', 'Yale University', 'Princeton University'],
+            UK: ['University of Oxford', 'University of Cambridge', 'Imperial College London', 'UCL', 'University of Edinburgh'],
+            Canada: ['University of Toronto', 'University of British Columbia', 'McGill University', 'University of Alberta', 'University of Montreal'],
+            Ireland: ['Trinity College Dublin', 'University College Dublin', 'University College Cork', 'Dublin City University'],
+            Germany: ['Technical University of Munich', 'Heidelberg University', 'Humboldt University of Berlin', 'University of Freiburg'],
+            Australia: ['University of Melbourne', 'University of Sydney', 'Australian National University', 'University of Queensland'],
+            France: ['Sorbonne University', 'University of Paris', 'École Normale Supérieure', 'University of Strasbourg']
+        };
+
+        // DOM elements
+        const loanForm = document.getElementById('loanForm');
+        const countrySelect = document.getElementById('country');
+        const universityInput = document.getElementById('university');
+        const universityContainer = document.getElementById('universityContainer');
+        const universitySuggestions = document.getElementById('universitySuggestions');
+        const coApplicantSelect = document.getElementById('coApplicant');
+        const coApplicantDetails = document.getElementById('coApplicantDetails');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultContent = document.getElementById('resultContent');
+        const formContainer = document.getElementById('formContainer');
+        const applyFormContainer = document.getElementById('applyFormContainer');
+        const applyForm = document.getElementById('applyForm');
+        const progressBar = document.getElementById('progressBar');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const applyLoadingSpinner = document.getElementById('applyLoadingSpinner');
+        const formError = document.getElementById('formError');
+
+        // Load saved data from localStorage
+        try {
+            const savedData = JSON.parse(localStorage.getItem('loanApplication')) || {};
+            Object.keys(savedData).forEach(key => {
+                const input = loanForm.querySelector(`[name="${key}"]`);
+                if (input) input.value = savedData[key];
+            });
+            log('Saved data loaded:', savedData);
+        } catch (error) {
+            log('Error loading saved data:', error);
+        }
+
+        // Update progress bar
+        const updateProgress = () => {
+            try {
+                const inputs = loanForm.querySelectorAll('input, select');
+                let filled = 0;
+                inputs.forEach(input => {
+                    if (input.value && input.name !== 'coApplicantRelationship') filled++;
+                });
+                const total = inputs.length - (coApplicantSelect.value === 'yes' ? 0 : 1);
+                const percentage = Math.round((filled / total) * 100);
+                progressBar.style.width = `${percentage}%`;
+                log('Progress updated:', percentage);
+            } catch (error) {
+                log('Error updating progress:', error);
+            }
+        };
+        loanForm.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', updateProgress);
+        });
+        updateProgress();
+
+        // Show university input when country is selected
+        countrySelect.addEventListener('change', () => {
+            try {
+                universityContainer.classList.toggle('hidden', !countrySelect.value);
+                universityInput.value = '';
+                universitySuggestions.innerHTML = '';
+                updateProgress();
+                log('Country changed:', countrySelect.value);
+            } catch (error) {
+                log('Error handling country change:', error);
+            }
+        });
+
+        // University autocomplete
+        universityInput.addEventListener('input', () => {
+            try {
+                const query = universityInput.value.trim().toLowerCase();
+                universitySuggestions.innerHTML = '';
+                if (query.length >= 3 && countrySelect.value) {
+                    const matches = universities[countrySelect.value].filter(uni =>
+                        uni.toLowerCase().startsWith(query)
+                    );
+                    matches.forEach(uni => {
+                        const li = document.createElement('li');
+                        li.textContent = uni;
+                        li.className = 'p-3 hover:bg-indigo-100 cursor-pointer rounded-lg transition-all';
+                        li.addEventListener('click', () => {
+                            universityInput.value = uni;
+                            universitySuggestions.innerHTML = '';
+                            updateProgress();
+                        });
+                        universitySuggestions.appendChild(li);
+                    });
+                    log('University suggestions:', matches);
+                }
+            } catch (error) {
+                log('Error handling university input:', error);
+            }
+        });
+
+        // Show co-applicant details if co-applicant is selected
+        coApplicantSelect.addEventListener('change', () => {
+            try {
+                coApplicantDetails.classList.toggle('hidden', coApplicantSelect.value !== 'yes');
+                const coApplicantRelationship = document.getElementById('coApplicantRelationship');
+                if (coApplicantSelect.value === 'yes') {
+                    coApplicantRelationship.setAttribute('required', 'required');
+                } else {
+                    coApplicantRelationship.removeAttribute('required');
+                    coApplicantRelationship.value = '';
+                }
+                updateProgress();
+                log('Co-applicant changed:', coApplicantSelect.value);
+            } catch (error) {
+                log('Error handling co-applicant change:', error);
+            }
+        });
+
+        // Handle form submission
+        loanForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            log('Form submission triggered');
+
+            try {
+                // Clear previous error messages
+                document.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
+                formError.style.display = 'none';
+                formError.textContent = '';
+
+                // Collect form data
+                const formData = new FormData(loanForm);
+                const data = Object.fromEntries(formData);
+                log('Form data collected:', data);
+
+                // Validate fields
+                let hasErrors = false;
+                if (!data.country) {
+                    document.getElementById('countryError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+                if (!data.university) {
+                    document.getElementById('universityError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+                if (!data.admissionStatus) {
+                    document.getElementById('admissionStatusError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+                if (!data.intakeMonth) {
+                    document.getElementById('intakeMonthError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+                if (!data.intakeYear || data.intakeYear < 2025 || data.intakeYear > 2030) {
+                    document.getElementById('intakeYearError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+                if (!data.course) {
+                    document.getElementById('courseError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+                if (!data.loanAmount || data.loanAmount < 100000) {
+                    document.getElementById('loanAmountError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+                if (!data.coApplicant) {
+                    document.getElementById('coApplicantError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+                if (data.coApplicant === 'yes' && !data.coApplicantRelationship) {
+                    document.getElementById('coApplicantRelationshipError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+
+                if (hasErrors) {
+                    formError.style.display = 'block';
+                    formError.textContent = 'Please fix the errors above to continue.';
+                    log('Validation errors detected');
+                    return;
+                }
+
+                // Show loading spinner
+                loadingSpinner.classList.remove('hidden');
+                log('Showing loading spinner');
+
+                // Save data to localStorage
+                localStorage.setItem('loanApplication', JSON.stringify(data));
+                log('Data saved to localStorage:', data);
+
+                // Generate eligibility result
+                let resultHtml = '';
+                if (data.coApplicant === 'yes') {
+                    resultHtml = `
+                        <h2 class="text-2xl font-bold mb-4 text-indigo-700">You're Eligible! 🎉</h2>
+                        <p class="text-gray-700"><strong>Loan Type:</strong> No Collateral Loan</p>
+                        <p class="text-gray-700"><strong>Loan Amount:</strong> INR ${data.loanAmount}</p>
+                        <p class="text-gray-700"><strong>Interest Rate:</strong> Starting at 8.45%</p>
+                        <p class="text-gray-700"><strong>Repayment:</strong> Moratorium period available</p>
+                        <p class="text-gray-700"><strong>Pre-closure Charges:</strong> None</p>
+                        <p class="text-gray-700"><strong>Processing Fees:</strong> Discount if applied through StudySahara</p>
+                        <p class="text-gray-700"><strong>Note:</strong> StudySahara does not charge any additional fees.</p>
+                    `;
+                } else {
+                    resultHtml = `
+                        <h2 class="text-2xl font-bold mb-4 text-indigo-700">You're Eligible! 🎉</h2>
+                        <p class="text-gray-700"><strong>Loan Type:</strong> No Co-applicant, No Collateral Loan</p>
+                        <p class="text-gray-700"><strong>Loan Amount:</strong> INR ${data.loanAmount}</p>
+                        <p class="text-gray-700"><strong>Interest Rate:</strong> Starting at 8.45%</p>
+                        <p class="text-gray-700"><strong>Repayment:</strong> Moratorium period available</p>
+                        <p class="text-gray-700"><strong>Pre-closure Charges:</strong> None</p>
+                        <p class="text-gray-700"><strong>Guidance:</strong> Detailed guidance for loan application and sanction through StudySahara</p>
+                        <p class="text-gray-700"><strong>Note:</strong> StudySahara does not charge any additional fees.</p>
+                    `;
+                }
+
+                // Update UI
+                resultContent.innerHTML = resultHtml;
+                resultContainer.classList.remove('hidden');
+                document.getElementById('applyNow').classList.remove('hidden');
+                formContainer.classList.add('hidden');
+                loadingSpinner.classList.add('hidden');
+                log('Eligibility result displayed');
+            } catch (error) {
+                log('Error during form submission:', error);
+                formError.style.display = 'block';
+                formError.textContent = 'An unexpected error occurred. Please try again.';
+                loadingSpinner.classList.add('hidden');
+            }
+        });
+
+        // Handle Apply Now button
+        document.getElementById('applyNow').addEventListener('click', () => {
+            try {
+                log('Apply Now button clicked');
+                resultContainer.classList.add('hidden');
+                applyFormContainer.classList.remove('hidden');
+            } catch (error) {
+                log('Error handling Apply Now click:', error);
+            }
+        });
+
+        // Handle application form submission
+        applyForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            log('Apply form submission triggered');
+
+            try {
+                // Clear previous error messages
+                document.querySelectorAll('.error-message').forEach(el => el.classList.add('hidden'));
+
+                const applyData = Object.fromEntries(new FormData(applyForm));
+                log('Apply form data:', applyData);
+
+                // Validate fields
+                let hasErrors = false;
+                if (!applyData.fullName) {
+                    document.getElementById('fullNameError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+                if (!applyData.mobile || !/^[0-9]{10}$/.test(applyData.mobile)) {
+                    document.getElementById('mobileError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+                if (!applyData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(applyData.email)) {
+                    document.getElementById('emailError').classList.remove('hidden');
+                    hasErrors = true;
+                }
+
+                if (hasErrors) {
+                    log('Apply form validation errors detected');
+                    return;
+                }
+
+                // Show loading spinner
+                applyLoadingSpinner.classList.remove('hidden');
+                log('Showing apply loading spinner');
+
+                const allData = { ...JSON.parse(localStorage.getItem('loanApplication')), ...applyData };
+                localStorage.setItem('loanApplication', JSON.stringify(allData));
+                log('Apply data saved to localStorage:', allData);
+
+                applyFormContainer.innerHTML = `
+                    <div class="text-center animate-fadeIn">
+                        <h2 class="text-2xl font-bold text-green-600 mb-4">Application Submitted Successfully! 🌟</h2>
+                        <p class="text-gray-700 mb-2">You're one step closer to achieving your dreams! Our loan manager will reach out to you within an hour.</p>
+                        <p class="text-gray-700">Working hours: 10 AM to 7 PM IST</p>
+                    </div>
+                `;
+
+                // Trigger confetti animation
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+
+                log('Application submitted successfully');
+                applyLoadingSpinner.classList.add('hidden');
+            } catch (error) {
+                log('Error during apply form submission:', error);
+                applyFormContainer.innerHTML = `<p class="text-red-600 text-center">An error occurred. Please try again.</p>`;
+                applyLoadingSpinner.classList.add('hidden');
+            }
+        });
+
+        // Log form initialization
+        log('Form initialized');
+    </script>
+</body>
+</html>

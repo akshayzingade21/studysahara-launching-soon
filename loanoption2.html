@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co-Applicant and No Collateral Loan | StudySahara</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: #1a5293;
+            margin-bottom: 15px;
+        }
+        h1 {
+            font-size: 2.8em;
+            text-align: center;
+            margin-top: 20px;
+        }
+        h2 {
+            font-size: 2em;
+            border-left: 5px solid #34C759;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+        p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        ul, ol {
+            margin-bottom: 15px;
+        }
+        ul {
+            list-style: disc;
+            padding-left: 25px;
+        }
+        ol {
+            list-style: decimal;
+            padding-left: 25px;
+        }
+        a {
+            color: #0078d7;
+            text-decoration: none;
+        }
+        a:hover {
+            color: #0056a3;
+            text-decoration: underline;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(90deg, #2c3e50, #3498db);
+            padding: 20px 0;
+            color: white;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        header h1 {
+            font-size: 2.4em;
+            margin: 0;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        section {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #34C759;
+            color: white;
+            border-radius: 25px;
+            font-weight: 600;
+            text-align: center;
+            transition: transform 0.3s, background-color 0.3s;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #2ca44e;
+            transform: scale(1.05);
+        }
+
+        /* Main Content Styles */
+        main {
+            padding: 40px 0;
+        }
+
+        /* Features Section */
+        .features ul {
+            list-style-type: circle;
+            padding-left: 20px;
+        }
+        .features ul li {
+            transition: transform 0.3s;
+        }
+        .features ul li:hover {
+            transform: translateX(10px);
+        }
+
+        /* FAQs */
+        .faq {
+            background: #e8f0fe;
+            padding: 25px;
+            border-radius: 12px;
+        }
+        .faq h3 {
+            cursor: pointer;
+            padding: 12px;
+            background-color: #d1e0ff;
+            border-radius: 8px;
+            transition: background 0.3s, transform 0.2s;
+        }
+        .faq h3:hover {
+            background-color: #b3ccff;
+            transform: translateY(-2px);
+        }
+        .faq p {
+            display: none;
+            padding: 15px;
+            margin: 0;
+            background: #fff;
+            border-radius: 8px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        .modal-content h2 {
+            margin-top: 0;
+        }
+        .modal-content input, .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .close {
+            float: right;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #333;
+        }
+
+        /* Footer Styles */
+        footer {
+            background: linear-gradient(90deg, #2c3e50, #3498db);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 1em;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            h2 {
+                font-size: 1.6em;
+            }
+            .container {
+                padding: 15px;
+            }
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Co-Applicant and No Collateral Loan</h1>
+    </header>
+    <main class="container">
+        <section>
+            <h2>What is Co-Applicant & No Collateral Loan?</h2>
+            <p>This is an education loan where the student has a co-applicant (like a parent, spouse, or guardian) but does not need to provide any collateral.
+                The co-applicant’s income and credit history are considered.</p>
+            <div style="text-align: center; margin-top: 20px;">
+                <span class="btn" onclick="openModal()">Request a Quote</span>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2>Features</h2>
+            <ul>
+                <li>No asset pledge requireed.</li>
+                <li>NCo-applicant's financial profile is essential for approval.</li>
+                <li>Flexible repayment options.</li>
+                <li>-.</li>
+            </ul>
+        </section>
+
+        <section class="eligibility container">
+            <h2>Eligibility</h2>
+            <ul>
+                <li>Admission to a recognized university abroad.</li>
+                <li>Co-applicant with a stable income source</li>
+                <ul style="list-style-type:circle;">
+                        <li>Salaried</li>
+                        <li>Self Employed</li>
+                        <li>Fixed income such as rental income, pension, interest from FDs etc</li>
+                    </ul>
+                <li>Credit History Consideration:
+                    <ul style="list-style-type:circle;">
+                        <li>Lenders may consider the student’s and co applicant's CIBIL score (Credit Information Bureau India Limited) or other credit reports to assess repayment ability.</li>
+                        <li>Even students or co applicants without a Credit/CIBIL score are eligible, as lenders may assess loan eligibility based on other factors like student's university ranking, course, and co applicant's income profle.</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+
+        <section class="suitable container">
+            <h2>Suitable For:</h2>
+            <ul>
+                <li>Students whose family members are willing to financially support them.</li>
+                <li>Students who do not wish to offer any assets as collateral but has financially strong co-applicant/s.</li>
+                <li>-</li>
+            </ul>
+        </section>
+
+        <section class="benefits container">
+            <h2>Benefits</h2>
+            <ul>
+                <li>Quick approval process.</li>
+                <li>Competitive interest rates.</li>
+                <li>-</li>
+                <li>No need for collateral.</li>
+                <li>Flexible repayment terms with a moratorium period during the study.</li>
+            </ul>
+        </section>
+
+        <section class="faq">
+            <h2>Frequently Asked Questions (FAQs)</h2>
+            <div>
+                <h3>What is the maximum loan amount available?</h3>
+                <p>The maximum loan amount varies based on the lender and your profile. It can cover both tuition fees and living expenses.</p>
+            </div>
+            <div>
+                <h3>What is the interest rate?</h3>
+                <p>Interest rates start from 10.25% and depend on the lender and your eligibility(based on student and co applicant profile).</p>
+            </div>
+            <div>
+                <h3>Can I repay the loan before the scheduled time?</h3>
+                <p>Yes, you can prepay the loan without any foreclosure charges.</p>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="quoteModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <h2>Request a Loan Quote</h2>
+            <p>Fill in your details to get a personalized loan quote.</p>
+            <input type="text" placeholder="Full Name" aria-label="Full Name">
+            <input type="tel" placeholder="Phone Number" aria-label="Phone Number">
+            <input type="email" placeholder="Email Address" aria-label="Email Address">
+            <textarea placeholder="Additional Information (e.g., course, university)" rows="4" aria-label="Additional Information"></textarea>
+            <div style="text-align: center;">
+                <span class="btn" onclick="alert('Quote request submitted! (This is a demo.)')">Submit</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 StudySahara. All rights reserved.
+    </footer>
+
+    <script>
+        // FAQ Toggle
+        document.querySelectorAll(".faq h3").forEach(item => {
+            item.addEventListener("click", () => {
+                const answer = item.nextElementSibling;
+                answer.style.display = answer.style.display === "none" || !answer.style.display ? "block" : "none";
+            });
+        });
+
+        // Modal Functions
+        function openModal() {
+            document.getElementById("quoteModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("quoteModal").style.display = "none";
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById("quoteModal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
+</body>
+</html>
